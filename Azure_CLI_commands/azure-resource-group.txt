@@ -1,0 +1,4 @@
+1. Log in using `az login`
+
+2. create my resource group in the region:
+    `az group create --name <resource-group-name> --location <resource-location>`

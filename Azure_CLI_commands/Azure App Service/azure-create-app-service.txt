@@ -1,0 +1,28 @@
+Log in using `az login`
+
+create my resource group in the region:
+    `az group create --name <resource-group-name> --location <resource-location>`
+
+Run the following command:
+    az webapp up \
+    --resource-group resource-group-west \
+    --name hello-world1234 \
+    --sku F1 \
+    --verbose
+
+If you want to update your app, make changes to your code and then run (Note: this may not update new requirements you may have added):
+    az webapp up \
+    --name hello-world1234 \
+    --verbose
+
+
+Delete an App Service
+    az webapp delete \
+        --name hello-world1234 \
+        --resource-group resource-group-west
+
+Delete an App Service plan
+    az appservice plan delete \
+        --name [App Service Plan Name] \
+        --resource-group resource-group-west
+

@@ -1,0 +1,134 @@
+Create a Linux VM called “linux-vm-west” inside “resource-group-west” which was created in a previous exercise. The VM should have the following configurations:
+    VM Name: "linux-vm-west"
+    Region: West US or the closest region to you that's available
+    Availability Options: No infrastructure redundancy required.
+    Image: Ubuntu Server (any version)
+    Azure Spot instance: No
+    Size: Standard B1ls
+    Authentication type: Password
+    Username: (any username you choose)
+    Password: (any password you choose)
+    Inbound Port Rules: Allow both 22 and 80
+
+After creating the VM, use secure copy to copy the web directory from here to the VM.
+    scp -r <SOURCE-DIR> [ADMIN-NAME]@[PUBLIC-IP]:<TARGET-DIR>
+
+Connect to the VM
+    ssh [ADMIN-NAME]@[PUBLIC-IP]
+
+Next, install python3-env and nginx
+    sudo apt-get -y update && sudo apt-get -y install nginx python3-venv
+
+Next, configure nginx to listen for incoming traffic on port 80 and set port 3000 as the proxy.
+    Navigate to /etc/nginx/sites-avaiable
+    Remove the default file
+    Replace it with a file containing:
+    server {
+        listen 80;
+        location / {
+            proxy_pass http://localhost:3000;
+            proxy_http_version 1.1;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection keep-alive;
+            proxy_set_header Host $host;
+            proxy_cache_bypass $http_upgrade;
+        }
+        }
+
+Now we’ll activate the directories by creating a sym link to the /sites-enabled directory
+    sudo ln -s /etc/nginx/sites-available/reverse-proxy.conf /etc/nginx/sites-enabled/reverse-proxy.conf
+
+We have to restart nginx so the changes take effect.
+    sudo service nginx restart
+
+cd to web
+    Create venv python3 -m venv venv
+
+    Activate the env source venv/bin/activate
+
+    Upgrade pip in our virtual environment and then Install dependencies
+
+    pip install --upgrade pip
+    pip install -r requirements.txt
+
+    We'll run our app python application.py
+
+In a web browser, we can visit the public IP address of the VM and you should see the application
+Type "exit" to disconnect from the VM
+
+
+
+Creating VM from command lines
+
+az login
+
+create our VM using 
+    az vm create \
+        --resource-group "resource-group-west" \
+        --name "linux-vm-west" \
+        --location "westus2" \
+        --image "UbuntuLTS" \
+        --size "Standard_B1ls" \
+        --admin-username "udacityadmin" \
+        --generate-ssh-keys \
+        --verbose
+
+we will open port 80 to allow outside traffic to our VM
+    az vm open-port \
+        --port "80" \
+        --resource-group "resource-group-west" \
+        --name "linux-vm-west"
+
+We'll need the public IP address of our VM. You can use the following command to grab the IP address for a particular VM from the CLI.
+    az vm list-ip-addresses -g resource-group-west -n linux-vm-west
+
+
+After creating the VM, use secure copy to copy the web directory from here to the VM.
+    scp -r <SOURCE-DIR> [ADMIN-NAME]@[PUBLIC-IP]:<TARGET-DIR>
+
+Connect to the VM
+    ssh [ADMIN-NAME]@[PUBLIC-IP]
+
+Next, install python3-env and nginx
+    sudo apt-get -y update && sudo apt-get -y install nginx python3-venv
+
+Next, configure nginx to listen for incoming traffic on port 80 and set port 3000 as the proxy.
+    Navigate to /etc/nginx/sites-avaiable
+    Remove the default file
+    Replace it with a file containing:
+    server {
+        listen 80;
+        location / {
+            proxy_pass http://localhost:3000;
+            proxy_http_version 1.1;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection keep-alive;
+            proxy_set_header Host $host;
+            proxy_cache_bypass $http_upgrade;
+        }
+        }
+
+Now we’ll activate the directories by creating a sym link to the /sites-enabled directory
+    sudo ln -s /etc/nginx/sites-available/reverse-proxy.conf /etc/nginx/sites-enabled/reverse-proxy.conf
+
+We have to restart nginx so the changes take effect.
+    sudo service nginx restart
+
+cd to web
+    Create venv python3 -m venv venv
+
+    Activate the env source venv/bin/activate
+
+    Upgrade pip in our virtual environment and then Install dependencies
+
+    pip install --upgrade pip
+    pip install -r requirements.txt
+
+    We'll run our app python application.py
+
+In a web browser, we can visit the public IP address of the VM and you should see the application
+Type "exit" to disconnect from the VM
+
+Cleanup
+If we no longer need a resource, we can delete them through the portal. The quickest way to do this from the CLI is to delete the resource group. This will delete all resources in that group
+    az group delete -n resource-group-west
