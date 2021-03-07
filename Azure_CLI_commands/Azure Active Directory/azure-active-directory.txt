@@ -1,0 +1,7 @@
+Application (client) ID: 237e0096-16b0-4fe6-8885-a49413a9be4f
+
+active-directory-client
+expires: 3/2/2022
+value : oq3Fy6P._V6~RcXITC-~5Dab8ZN.NI47Wt
+id: 54517497-449c-4221-8e7c-2db6acb8412a
+
