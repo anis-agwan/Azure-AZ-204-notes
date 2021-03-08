@@ -1,0 +1,26 @@
+Create Azure Functions with Azure CLI
+
+first login to your account
+    az login
+
+Replace the resource group, storage account, the (pricing) plan, and region with your own. If you do not have those services, you will need to create them first.  
+    az functionapp create \
+    --resource-group \
+    --plan \
+    --name \
+    --storage-account \
+    --os-type Linux \
+    --consumption-plan-location \
+    --runtime python
+
+echo "Create a empty function app on Linux (Consumption Plan): $APP_NAME"
+    az functionapp create \
+        --resource-group $RESOURCE_GROUP \
+        --name $APP_NAME \
+        --storage-account $STORAGE_ACCOUNT \
+        --os-type Linux \
+        --consumption-plan-location $REGION \
+        --runtime python
+
+Now create your HTTP Function:
+    func new --language python --name MyHTTPFunction

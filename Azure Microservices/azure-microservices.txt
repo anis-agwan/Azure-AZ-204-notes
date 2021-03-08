@@ -1,0 +1,13 @@
+Glossary
+Terms are listed based on order of appearance.
+
+Key Term	Definition
+Microservices (architecture)	An approach to constructing applications as a set of smaller, independent services by maintaining the logical separation of presentation, business, and data layers. The approach evolves from the concept of Separation of Concerns and the Single Responsibility Principle design philosophy. Often compared with monolithic architectures.
+Single Responsibility Principle	A design philosophy that states each component should be responsible for one function or purpose - no more, and no less.
+Ambassador Pattern	The microservices architectural pattern that relies on a helper service to negotiate connectivity-related requests from outside clients to internal services.
+Anti-corruption layer pattern	The microservices architectural pattern that relies on a service to deal with different versions of the same application.
+Back-ends for Front-ends pattern	Also called back-end as a service or BaaS; the microservices architectural pattern that relies on a service to create separate backend services for one or multiple clients to consume.
+Bulkhead isolation pattern	The microservices architectural pattern that relies on a service minimizing one service failure from affecting other services. Use this pattern to make sure that if a single service cannot handle all resources, it will not have a domino effect and that causes others to fail.
+Consumption Plan	Only charges for the runtime of your function app, and includes some free time per Azure subscription.
+Premium Plan	Has all of the features and scaling available through the Consumption plan, but with improved performance and VNET access. There are different pricing tiers to choose from that vary in cost.
+Dedicated (App Service) Plan	The most expensive option. For example, when you need a longer running Functions (such as more than 10 minutes), or a dedicated VM server due to legal requirements.

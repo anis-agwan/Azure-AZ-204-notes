@@ -1,0 +1,67 @@
+1. Create a new CosmosDB account.
+Replace the resource group, region (make sure you read the disclaimer note below), and storage account with your own. If you don't know your resource group name and storage account name, visit the portal to retrieve them.
+
+RESOURCE_GROUP="<your-resource-group>"
+REGION="<REGION>" 
+STORAGE_ACCOUNT="<STORAGE ACCOUNT MAME>"
+
+# This is the new account here
+COSMOS_ACCOUNT="<COSMOS ACCOUNT NAME>"
+
+az cosmosdb create -n $COSMOS_ACCOUNT -g $RESOURCE_GROUP  \
+--locations regionName=$REGION failoverPriority=0 isZoneRedundant=False 
+Note: It may take a while for the CosmosDB account to be created, sometimes on the order of 10-20 minutes.
+
+2. Creating a new MongoDB database with a sample collection
+```bash
+COSMOSDB_ACCOUNT=""
+RESOURCE_GROUP=""
+DATABASE_NAME=""
+CREATE_LEASE_COLLECTION=0 # yes,no=(1,0)
+DB_NAME=""
+
+SAMPLE_COLLECTION=""
+
+Get your CosmosDB key and save as a variable
+COSMOSDB_KEY=$(az cosmosdb list-keys --name $COSMOSDB_ACCOUNT--resource-group $RESOURCE_GROUP --output tsv |awk '{print $1}')
+
+az cosmosdb database create \
+--name $COSMOSDB_ACCOUNT \
+--db-name $DATABASE_NAME \
+--key $COSMOSDB_KEY \
+--resource-group $RESOURCE_GROUP
+
+Create a container with a partition key and provision 400 RU/s throughput.
+az cosmosdb collection create \
+--resource-group $RESOURCE_GROUP \
+--collection-name $SAMPLE_COLLECTION \
+--name $COSMOSDB_ACCOUNT \
+--db-name $DATABASE_NAME \
+--partition-key-path /name \
+--throughput 400
+
+This information is viewable in your portal >> Azure Cosmos DB >> Select the DB name >> Settings >> Connection String >>
+replace the host, port, username, and primary password with your own
+MONGOGB_HOST=".mongo.cosmos.azure.com"
+MONGODB_PORT="10255"
+USERNAME=""
+
+Copy/past the primary password here
+PRIMARY_PW=""
+
+DB_NAME=""
+COLLECTION_CARS="cars"
+
+Import command for Linux and Mac OS
+bash
+mongoimport -h $MONGOGB_HOST:$MONGODB_PORT \
+-d $DB_NAME -c $COLLECTION_CARS -u $USERNAME -p $PRIMARY_PW \
+––ssl ––jsonArray ––file sample_cars_collection.json
+
+Import command for Windows on Powershell
+powershell
+C:\path\to\your\mongodb\bin\mongoimport –h $MONGOGB_HOST:$MONGODB_PORT |
+–u $USERNAME –p $PRIMARY_PW |
+–d $DB_NAME –c $COLLECTION_CARS |
+––file 'sample_cars_collection.json' ––type json
+```
